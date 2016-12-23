@@ -36,60 +36,105 @@ const gameType = () => {
         ]
     }]).then(function(answers) {
 
-        newCard(answers['game']);
+    	let card = newCard(answers['game']);
+    	displayCard(card);
+
     });
 
 }
 
-let displayCard = (questions) => {
+const displayCard = (card) => {
 
-    inquirer.prompt(questions).then(function(answers) {
+	let flash = card.next();
 
-        console.log('Congrats, you made it through all of the cards!');
-        return
+    if (flash.done === false){
+    	inquirer.prompt(flash.value)
+    	.then((ans) => {
 
-    });
+    		displayCard(card);
+
+    	});
+    } else {
+    	console.log('Congrats, you went through all of the flash cards!');
+    }
 
 }
 
 //play either Regular or Cloze flashcard game
-let newCard = (type) => {
- 
-    //determine array that will be used to control game
-    let cardType = type
-    let data = (cardType === 'Regular') ? flashCardArr : clozeArr;
-    let promptArray = [];
-    let cards = data.length;
+//SETUP AS AN ES6 GENERATOR...
+function* newCard(type) {
 
-    //create an array of inquirer prompts with flash / cloze card data
-    for (let i = 0; i < cards; i++) {
-    	//capture answer and question
-        let answer = data[i]['answer'].toLowerCase();
-        let question = (type === 'Regular') ? data[i]['text'] : data[i]['text'].replace(/\$/g, '...');
+        //determine array that will be used to control game
+        let cardType = type;
+        let data = (cardType === 'Regular') ? flashCardArr : clozeArr;
+        let promptArray = [];
+        let cards = data.length;
 
-        //build inquirer input and push to an array of flashcards to be iterated through later
-        let newQuestion = {
-        	type: 'input',
-        	name: 'question',
-        	message: question,
-        	validate: function(value){
-        		let resp = value.toLowerCase().trim();
-        		if (resp === answer){
-        			console.log('\nYou were correct!');
-        		}
-        		else {
-        			console.log('\nNope, the correct answer is: ');
-        			console.log(answer);
-        		}
-        		return true
-        	}
+        //create an array of inquirer prompts with flash / cloze card data
+        for (let i = 0; i < cards; i++) {
+            //capture answer and question
+            let answer = data[i]['answer'].toLowerCase();
+            let question = (type === 'Regular') ? data[i]['text'] : data[i]['text'].replace(/\$/g, '...');
+
+            //build inquirer input and push to an array of flashcards to be iterated through later
+            let newQuestion = {
+                type: 'input',
+                name: 'question',
+                message: question,
+                validate: function(value) {
+                    let resp = value.toLowerCase().trim();
+                    if (resp === answer) {
+                        console.log('\nYou were correct!');
+                    } else {
+                        console.log('\nNope, the correct answer is: ');
+                        console.log(answer);
+                    }
+                    return true
+                }
+            }
+            yield newQuestion
         }
-        promptArray.push(newQuestion);
-    }
 
-    //display the flash / cloze card
-    displayCard(promptArray);
-}
+    }
+    /*
+    let newCard = (type) => {
+     
+        //determine array that will be used to control game
+        let cardType = type;
+        let data = (cardType === 'Regular') ? flashCardArr : clozeArr;
+        let promptArray = [];
+        let cards = data.length;
+
+        //create an array of inquirer prompts with flash / cloze card data
+        for (let i = 0; i < cards; i++) {
+        	//capture answer and question
+            let answer = data[i]['answer'].toLowerCase();
+            let question = (type === 'Regular') ? data[i]['text'] : data[i]['text'].replace(/\$/g, '...');
+
+            //build inquirer input and push to an array of flashcards to be iterated through later
+            let newQuestion = {
+            	type: 'input',
+            	name: 'question',
+            	message: question,
+            	validate: function(value){
+            		let resp = value.toLowerCase().trim();
+            		if (resp === answer){
+            			console.log('\nYou were correct!');
+            		}
+            		else {
+            			console.log('\nNope, the correct answer is: ');
+            			console.log(answer);
+            		}
+            		return true
+            	}
+            }
+            promptArray.push(newQuestion);
+        }
+
+        //display the flash / cloze card
+        displayCard(promptArray);
+    }
+    */
 
 
 //========================GAME PLAY==========================================================
