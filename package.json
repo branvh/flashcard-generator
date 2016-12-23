@@ -1,0 +1,28 @@
+{
+  "name": "flashcard-generator",
+  "version": "1.0.0",
+  "description": "create and display flashcards",
+  "main": "flashcard-generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/branvh/flashcard-generator.git"
+  },
+  "author": "brandon van heyde",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/branvh/flashcard-generator/issues"
+  },
+  "homepage": "https://github.com/branvh/flashcard-generator#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "ejs": "^2.5.5",
+    "express": "^4.14.0",
+    "inquirer": "^2.0.0",
+    "mysql": "^2.12.0",
+    "request": "^2.79.0",
+    "socket.io": "^1.7.2"
+  }
+}
